@@ -49,8 +49,9 @@ def gen_pnms(lambd):
 
     gamma = -d[0] % p
     B = matrix(ZZ, make_matrice_gamma(gamma, n, p)).LLL()
-    if 2 * n * abs(lambd) * B.norm(1) < phi:
-        rho = B.norm(1) - 1
+    if 2 * n * abs(lambd) * B.norm(1) >= phi:
+        n += 1
+    rho = B.norm(1) - 1
     #M
     i = 0
     while B[i][0] % 2 == 0:
@@ -62,6 +63,7 @@ def gen_pnms(lambd):
     d = int(d)
     d_inv = pow(d, -1, phi)
     M_inv = d_inv * Mu % phi
+
     pnms = [p, n, gamma, rho, E]
     return pnms, M, M_inv, phi
 
