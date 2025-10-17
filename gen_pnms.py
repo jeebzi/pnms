@@ -44,14 +44,13 @@ def gen_pnms(lambd):
     pol = PolynomialRing(K, "X")
     X = pol("X")
     # E = ZZ["X"](list(X**n-lambd))
-    E = ZZ["X"](f"X^{n} - 2")
+    E = ZZ["X"](f"X^{n} - {lambd}")
     d, v, u = xgcd((squaremult(X, p, E) - X) % E, E)
 
     gamma = -d[0] % p
     B = matrix(ZZ, make_matrice_gamma(gamma, n, p)).LLL()
-    if 2 * n * abs(lambd) * B.norm(1) >= phi:
-        n += 1
-    rho = B.norm(1) - 1
+    if 2 * n * abs(lambd) * B.norm(1) < phi:
+        rho = B.norm(1) - 1
     #M
     i = 0
     while B[i][0] % 2 == 0:
