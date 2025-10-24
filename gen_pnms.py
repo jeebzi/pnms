@@ -35,22 +35,29 @@ def make_matrice_gamma(gamma, n, p):
     return matrice
 
 
-def gen_pnms(lambd):
+def gen_pnms():
 
     p = 2**255 - 19
     n = 5
+    lambd = 2
     phi = 2**64
     K = GF(p)
     pol = PolynomialRing(K, "X")
     X = pol("X")
-    # E = ZZ["X"](list(X**n-lambd))
-    E = ZZ["X"](f"X^{n} - {lambd}")
-    d, v, u = xgcd((squaremult(X, p, E) - X) % E, E)
+    found_lambda = False
+    while not found_lambda:
+        # E = ZZ["X"](list(X**n-lambd))
+        E = ZZ["X"](f"X^{n} - {lambd}")
+        d, v, u = xgcd((squaremult(X, p, E) - X) % E, E)
 
-    gamma = -d[0] % p
-    B = matrix(ZZ, make_matrice_gamma(gamma, n, p)).LLL()
-    if 2 * n * abs(lambd) * B.norm(1) < phi:
-        rho = B.norm(1) - 1
+        gamma = -d[0] % p
+        B = matrix(ZZ, make_matrice_gamma(gamma, n, p)).LLL()
+        if 2 * n * abs(lambd) * B.norm(1) < phi:
+            found_lambda = True
+        elif lamb > phi / 2 * n:
+            lambd = 2
+            n += 1
+    rho = B.norm(1) - 1
     #M
     i = 0
     while B[i][0] % 2 == 0:
@@ -64,7 +71,7 @@ def gen_pnms(lambd):
     M_inv = d_inv * Mu % phi
 
     pnms = [p, n, gamma, rho, E]
-    return pnms, M, M_inv, phi
+    return pnms, M, M_inv, phi, lambd
 
 def mult_montg_pnms_rand(pnms, M, M_inv, phi):
     """
@@ -99,5 +106,5 @@ def gen_poly_random(n, inf, sup):
     return pol
     
 if __name__ == "__main__":
-    pnms, M, M_inv, phi = gen_pnms(2)
+    pnms, M, M_inv, phi, lambd = gen_pnms()
     print(mult_montg_pnms_rand(pnms, M, M_inv, phi))
