@@ -37,7 +37,7 @@ def make_matrice_gamma(gamma, n, p):
 
 def gen_pnms():
 
-    p = 2**255 - 19
+    p = random_prime(2**256)
     n = 5
     lambd = 2
     phi = 2**64
@@ -50,13 +50,15 @@ def gen_pnms():
         E = ZZ["X"](f"X^{n} - {lambd}")
         d, v, u = xgcd((squaremult(X, p, E) - X) % E, E)
 
-        gamma = -d[0] % p
+        # gamma = -d[0] % p
+        gamma = d.roots()[0][0]
         B = matrix(ZZ, make_matrice_gamma(gamma, n, p)).LLL()
         if 2 * n * abs(lambd) * B.norm(1) < phi:
             found_lambda = True
-        elif lamb > phi / 2 * n:
+        elif lambd > phi / 2 * n:
             lambd = 2
             n += 1
+        lambd += 2
     rho = B.norm(1) - 1
     #M
     i = 0
@@ -107,4 +109,5 @@ def gen_poly_random(n, inf, sup):
     
 if __name__ == "__main__":
     pnms, M, M_inv, phi, lambd = gen_pnms()
+    print("coc")
     print(mult_montg_pnms_rand(pnms, M, M_inv, phi))
