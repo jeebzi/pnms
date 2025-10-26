@@ -2,6 +2,7 @@ from sage.all import *
 from math import log2
 import random as r
 
+PSIZE = 256
 
 def squaremult(a, b, m):
     c = 1
@@ -36,10 +37,9 @@ def make_matrice_gamma(gamma, n, p):
     return matrice
 
 
-def gen_pnms():
+def gen_pnms(phi):
 
-    phi = 2**64
-    p = random_prime(2**256)
+    p = random_prime(2**PSIZE)
     # n = 5
     n = int(log2(phi) // 64 + 1)
     lambd = 2
@@ -59,9 +59,10 @@ def gen_pnms():
             B = matrix(ZZ, make_matrice_gamma(gamma, n, p)).LLL()
         if root and 2 * n * abs(lambd) * B.norm(1) < phi:
             found_lambda = True
-        elif lambd > 500:
+        elif lambd > 100:
             lambd = 2
             n += 1
+            print("n", n)
         lambd += 2
     rho = B.norm(1) - 1
     #M
@@ -112,5 +113,5 @@ def gen_poly_random(n, inf, sup):
     return pol
     
 if __name__ == "__main__":
-    pnms, M, M_inv, phi, lambd = gen_pnms()
+    pnms, M, M_inv, phi, lambd = gen_pnms(2**64)
     print(mult_montg_pnms_rand(pnms, M, M_inv, phi))
