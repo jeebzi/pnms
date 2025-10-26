@@ -40,8 +40,8 @@ def make_matrice_gamma(gamma, n, p):
 def gen_pnms(phi):
 
     p = random_prime(2**PSIZE)
-    # n = 5
-    n = int(log2(phi) // 64 + 1)
+    n = 5
+    # n = int(log2(phi) // 64 + 1)
     lambd = 2
     K = GF(p)
     pol = PolynomialRing(K, "X")
@@ -60,7 +60,7 @@ def gen_pnms(phi):
         if root and 2 * n * abs(lambd) * B.norm(1) < phi:
             found_lambda = True
         elif lambd > 100:
-            lambd = 2
+            lambd = 0
             n += 1
             print("n", n)
         lambd += 2
