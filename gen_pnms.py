@@ -1,4 +1,5 @@
 from sage.all import *
+from math import log2
 import random as r
 
 
@@ -37,10 +38,11 @@ def make_matrice_gamma(gamma, n, p):
 
 def gen_pnms():
 
-    p = random_prime(2**256)
-    n = 5
-    lambd = 2
     phi = 2**64
+    p = random_prime(2**256)
+    # n = 5
+    n = int(log2(phi) // 64 + 1)
+    lambd = 2
     K = GF(p)
     pol = PolynomialRing(K, "X")
     X = pol("X")
@@ -51,11 +53,13 @@ def gen_pnms():
         d, v, u = xgcd((squaremult(X, p, E) - X) % E, E)
 
         # gamma = -d[0] % p
-        gamma = d.roots()[0][0]
-        B = matrix(ZZ, make_matrice_gamma(gamma, n, p)).LLL()
-        if 2 * n * abs(lambd) * B.norm(1) < phi:
+        root = d.roots()
+        if root:
+            gamma = root[0][0]
+            B = matrix(ZZ, make_matrice_gamma(gamma, n, p)).LLL()
+        if root and 2 * n * abs(lambd) * B.norm(1) < phi:
             found_lambda = True
-        elif lambd > phi / 2 * n:
+        elif lambd > 500:
             lambd = 2
             n += 1
         lambd += 2
