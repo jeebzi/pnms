@@ -172,12 +172,19 @@ void print_poly(int64_t *poly, int deg) {
 
 int main() {
 	seed_prng_highres();
-	int64_t *A = gen_random_poly(n - 1, -rho + 1, rho);
-	int64_t *B = gen_random_poly(n - 1, -rho + 1, rho);
-	int64_t *C_prime = montgomery_mul_pnms(A, B, n, E, n, M, M_inv, phi);
-	print_poly(A, n - 1);
-	print_poly(B, n - 1);
-	print_poly(C_prime, n - 1);
+	int i = 0;
+	while (i < 100) {
+		int64_t *A = gen_random_poly(n - 1, -rho + 1, rho);
+		int64_t *B = gen_random_poly(n - 1, -rho + 1, rho);
+		int64_t *C_prime = montgomery_mul_pnms(A, B, n, E, n, M, M_inv, phi);
+		printf("A ");
+		print_poly(A, n - 1);
+		printf("B ");
+		print_poly(B, n - 1);
+		printf("C prime ");
+		print_poly(C_prime, n - 1);
+		i += 1;
+	}
 	return 0;
 }
 	
