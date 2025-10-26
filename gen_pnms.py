@@ -2,7 +2,7 @@ from sage.all import *
 from math import log2
 import random as r
 
-PSIZE = 16
+PSIZE = 256
 
 def squaremult(a, b, m):
     c = 1
@@ -113,6 +113,6 @@ def gen_poly_random(n, inf, sup):
     return pol
     
 if __name__ == "__main__":
-    pnms, M, M_inv, phi, lambd = gen_pnms(2**16)
+    pnms, M, M_inv, phi, lambd = gen_pnms(2**64)
     print("pnms", pnms, "M", M, "M_inv", M_inv, "lambda", lambd)
     print(mult_montg_pnms_rand(pnms, M, M_inv, phi))
