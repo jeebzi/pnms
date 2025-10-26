@@ -1,4 +1,4 @@
-#include "small_param.h"
+#include "param.h"
 int degree_trim( int64_t *p, int len) {
     int i;
     for (i = len - 1; i >= 0; --i) if (p[i] != 0) return i;
