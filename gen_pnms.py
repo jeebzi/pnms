@@ -109,5 +109,4 @@ def gen_poly_random(n, inf, sup):
     
 if __name__ == "__main__":
     pnms, M, M_inv, phi, lambd = gen_pnms()
-    print("coc")
     print(mult_montg_pnms_rand(pnms, M, M_inv, phi))
