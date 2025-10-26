@@ -135,6 +135,15 @@ int64_t rand_int64(int64_t inf, int64_t sup) {
 	return (int64_t)(r % range) + inf;
 }
 
+/* graine haute-résolution en combinant time(), clock() et adresse */
+void seed_prng_highres(void) {
+    unsigned s = (unsigned)time(NULL);
+    s ^= (unsigned)clock();
+    s ^= (unsigned)((uintptr_t)&s >> 4);
+    /* mélanger encore un peu avec plusieurs appels rand() après srand */
+    srand(s);
+}
+
 int64_t * gen_random_poly(uint64_t n, int64_t inf, int64_t sup) {
 	/* genère aléatoirement un polynôme
 	 * de degrès n avec ces coefs entre inf et sup
@@ -162,7 +171,7 @@ void print_poly(int64_t *poly, int deg) {
 }
 
 int main() {
-	srand(time(NULL));
+	seed_prng_highres();
 	int64_t *A = gen_random_poly(n - 1, -rho + 1, rho);
 	int64_t *B = gen_random_poly(n - 1, -rho + 1, rho);
 	int64_t *C_prime = montgomery_mul_pnms(A, B, n, E, n, M, M_inv, phi);
